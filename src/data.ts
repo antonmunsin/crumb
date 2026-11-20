@@ -1,0 +1,38 @@
+export const brand = { name: 'crumb' }
+export type Unit = 'g' | 'ml' | 'pcs'
+export type Ingredient = { id: string; name: string; unit: Unit; price: number }
+export type Item = { id: string; ingredient: string; quantity: number; unit: Unit; expiry: string; name?: string }
+export type Recipe = { id: string; name: string; description: string; time: number; cuisine: string; diet: 'vegan' | 'vegetarian' | 'omnivore'; impact: number; image: string; ingredients: { ingredient: string; quantity: number }[]; steps: string[] }
+export type Profile = { likes: string[]; dislikes: string[]; diet: string; servings: number; maxTime: number; budget: number; environment: number }
+export type Selection = { id: string; recipe: string; servings: number }
+export type Extra = { id: string; name: string; quantity: number; unit: Unit }
+export type State = { inventory: Item[]; profile: Profile; selected: Selection[]; extras: Extra[]; checked: string[] }
+export const ingredients: Ingredient[] = [
+['spinach','Spinach','g',.08],['tomato','Cherry tomatoes','g',.045],['pasta','Pasta','g',.025],['chickpea','Chickpeas','g',.035],['rice','Rice','g',.025],['egg','Eggs','pcs',3.5],['feta','Feta','g',.15],['lemon','Lemon','pcs',5],['garlic','Garlic cloves','pcs',1],['onion','Onion','pcs',3],['pepper','Bell pepper','pcs',8],['broccoli','Broccoli','g',.045],['coconut','Coconut milk','ml',.05],['lentil','Red lentils','g',.035],['bread','Bread slices','pcs',2],['avocado','Avocado','pcs',12],['potato','Potatoes','g',.018],['yogurt','Yogurt','g',.035],['chicken','Chicken','g',.12],['tofu','Tofu','g',.075],['tortilla','Tortillas','pcs',3],['bean','Black beans','g',.035],['oats','Oats','g',.02],['mushroom','Mushrooms','g',.075]
+].map(([id,name,unit,price])=>({id:String(id),name:String(name),unit:unit as Unit,price:Number(price)}))
+export const ingredientById = Object.fromEntries(ingredients.map(i=>[i.id,i])) as Record<string,Ingredient>
+const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=85`
+const photos = {
+ pasta:photo('photo-1473093295043-cdd812d0e601'),bowl:photo('photo-1512621776951-a57141f2eefd'),curry:photo('photo-1603894584373-5ac82b2ae398'),toast:photo('photo-1525351484163-7529414344d8'),salad:photo('photo-1511690743698-d9d85f2fbf38'),rice:photo('photo-1512058564366-18510be2db19')
+}
+function recipe(id:string,name:string,description:string,time:number,cuisine:string,diet:Recipe['diet'],impact:number,image:string,items:[string,number][],steps?:string[]):Recipe { return {id,name,description,time,cuisine,diet,impact,image,ingredients:items.map(([ingredient,quantity])=>({ingredient,quantity})),steps:steps??['Wash and prepare the vegetables. Measure out the remaining ingredients.','Cook the grains or pasta according to the packet instructions, if included.','Sauté the vegetables in a little oil, combine with the remaining ingredients and cook until tender. Season to taste and serve.']} }
+export const recipes:Recipe[]=[
+recipe('green-pasta','A little green pasta','Lemony, garlicky, and a very good use of that spinach.',20,'Italian','vegetarian',1,photos.pasta,[['pasta',180],['spinach',100],['feta',80],['lemon',1],['garlic',2]],['Boil the pasta in salted water until al dente. Save a mug of cooking water.','Gently sauté sliced garlic in oil. Add spinach and stir until wilted.','Toss in pasta, crumbled feta, lemon zest and juice. Loosen with pasta water and serve.']),
+recipe('chickpea-bowl','The feel-good bowl','Crispy chickpeas, fresh greens, a little lemon.',25,'Mediterranean','vegan',1,photos.bowl,[['chickpea',240],['rice',150],['spinach',80],['tomato',150],['lemon',1]]),
+recipe('coconut-curry','Cozy coconut curry','A one-pan kind of evening. Big flavor, little effort.',30,'Indian','vegan',1,photos.curry,[['lentil',160],['coconut',300],['spinach',100],['rice',150],['onion',1]]),
+recipe('avo-toast','Not-just-breakfast toast','Creamy avocado and a golden egg. Dinner, sorted.',10,'Everyday','vegetarian',2,photos.toast,[['bread',4],['avocado',1],['egg',2],['tomato',100]],['Toast the bread until golden.','Mash avocado with salt, pepper and a splash of lemon juice if you have it.','Fry the eggs until the whites are fully set. Spread avocado on toast and top with eggs and chopped tomatoes.']),
+recipe('feta-salad','Sunshine feta salad','Crunchy, colorful, and ready before you know it.',15,'Mediterranean','vegetarian',2,photos.salad,[['tomato',250],['feta',100],['chickpea',200],['pepper',1],['lemon',1]],['Rinse chickpeas and chop tomatoes and pepper.','Toss everything with lemon juice and a little olive oil.','Crumble feta over the top, season and serve.']),
+recipe('egg-rice','Better-than-takeout rice','Your fridge odds and ends find their happy place.',20,'Asian','vegetarian',1,photos.rice,[['rice',180],['egg',3],['broccoli',200],['garlic',2]]),
+recipe('tomato-pasta','Weeknight tomato pasta','The comforting classic that always comes through.',25,'Italian','vegan',1,photos.pasta,[['pasta',180],['tomato',300],['garlic',2],['onion',1]]),
+recipe('tofu-bowl','Golden tofu bowl','Crisp edges, soft rice, and plenty of greens.',30,'Asian','vegan',1,photos.bowl,[['tofu',250],['rice',160],['broccoli',200],['garlic',2]]),
+recipe('bean-wraps','Loaded bean wraps','A little messy. A lot to love.',20,'Mexican','vegetarian',1,photos.salad,[['bean',240],['tortilla',4],['tomato',150],['yogurt',80],['pepper',1]]),
+recipe('chicken-rice','Lemon chicken & rice','A bright, satisfying midweek favorite.',35,'Mediterranean','omnivore',3,photos.rice,[['chicken',300],['rice',160],['lemon',1],['broccoli',200]],['Cook rice according to the packet.','Cut chicken into small pieces. Sauté in oil until fully cooked, reaching 75°C internally.','Steam broccoli until tender. Serve with chicken, rice, lemon juice and seasoning.']),
+recipe('potato-pan','Crispy potato supper','Golden potatoes with eggs and a tangy yogurt spoonful.',30,'Everyday','vegetarian',1,photos.toast,[['potato',500],['egg',2],['yogurt',100],['spinach',80]]),
+recipe('lentil-soup','Slow-down lentil soup','Something warm, simple, and nourishing.',35,'Indian','vegan',1,photos.curry,[['lentil',180],['tomato',200],['onion',1],['coconut',200]]),
+recipe('mushroom-pasta','Creamy mushroom pasta','Earthy mushrooms and a silky yogurt sauce.',25,'Italian','vegetarian',2,photos.pasta,[['pasta',180],['mushroom',250],['yogurt',100],['garlic',2]]),
+recipe('chickpea-toast','Chickpea smash toast','A fresh take on the easiest dinner.',15,'Everyday','vegan',1,photos.toast,[['bread',4],['chickpea',240],['lemon',1],['tomato',100]]),
+recipe('pepper-rice','Rainbow pepper rice','Colorful vegetables, fluffy rice, zero fuss.',25,'Mexican','vegan',1,photos.rice,[['rice',180],['pepper',2],['bean',200],['onion',1]]),
+recipe('broccoli-bowl','Green goddess bowl','A generous bowl of the good stuff.',25,'Mediterranean','vegetarian',1,photos.bowl,[['broccoli',250],['chickpea',200],['feta',80],['yogurt',80],['lemon',1]])
+]
+export function dateIn(days:number) { const d=new Date();d.setDate(d.getDate()+days);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` }
+export function seed():State { return {inventory:[['spinach',150,2],['tomato',250,4],['pasta',500,120],['chickpea',380,90],['rice',600,180],['egg',6,8],['garlic',5,20],['onion',2,15]].map(([ingredient,quantity,days],i)=>({id:`seed-${i}`,ingredient:String(ingredient),quantity:Number(quantity),unit:ingredientById[String(ingredient)].unit,expiry:dateIn(Number(days))})),profile:{likes:['Italian','Mediterranean'],dislikes:[],diet:'any',servings:2,maxTime:45,budget:2,environment:2},selected:[],extras:[],checked:[]} }
